@@ -1,2 +1,4 @@
+export * from './ItemCounter';
 export * from './Navbar';
-export * from './NoFavorites';
+export * from './SideMenu';
+export * from './FullScreenLoading';

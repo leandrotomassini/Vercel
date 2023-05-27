@@ -1,54 +1,39 @@
-import { NextPage, GetStaticProps } from 'next';
-import { Grid } from '@nextui-org/react';
+import { NextPage } from 'next';
+import { Typography } from '@mui/material';
 
-import { pokeApi } from '../api';
-import { Layout } from '../components/layouts';
+import { ShopLayout } from '../components/layouts';
+import { FullScreenLoading } from '../components/ui';
+import { ProductList } from '../components/products';
+import { useProducts } from '../hooks';
 
 
-import { PokemonListResponse, SmallPokemon } from '../interfaces';
-import PokemonCard from '../components/pokemon/PokemonCard';
 
-interface Props {
-  pokemons: SmallPokemon[];
-}
+const HomePage: NextPage = () => {
 
-const HomePage: NextPage<Props> = ({ pokemons }) => {
-
+  const { products, isLoading } = useProducts('/products');
 
   return (
-    <Layout title='Listado de Pokémons'>
+    <ShopLayout
+      title={'Teslo-Shop - Home'}
+      pageDescription={'Encuentra los mejores productos de Teso aquí.'}
+    >
+      <Typography variant='h1' component='h1'>
+        Tienda
+      </Typography>
 
-      <Grid.Container gap={2} justify='flex-start' >
-        {
-          pokemons.map((pokemon) => (
-            <PokemonCard pokemon={pokemon} key={pokemon.id} />
-          ))
-        }
-      </Grid.Container>
+      <Typography variant='h2' sx={{ mb: 1 }}>
+        Todos los productos
+      </Typography>
+
+      {
+        isLoading
+          ? <FullScreenLoading />
+          : <ProductList products={products} />
+      }
 
 
-    </Layout >
+    </ShopLayout>
   )
-}
-
-
-export const getStaticProps: GetStaticProps = async (ctx) => {
-
-  const { data } = await pokeApi.get<PokemonListResponse>('/pokemon?limit=151');
-
-  const pokemons: SmallPokemon[] = data.results
-    .map((poke, i) => ({
-      ...poke,
-      id: i + 1,
-      img: `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/dream-world/${i + 1}.svg`
-    }));
-
-
-  return {
-    props: {
-      pokemons
-    }
-  }
 }
 
 export default HomePage

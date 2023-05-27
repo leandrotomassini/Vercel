@@ -1,50 +1,148 @@
-import { Spacer, Text, useTheme } from "@nextui-org/react";
+import { useContext, useState } from 'react';
+import { useRouter } from 'next/router';
 import NextLink from 'next/link';
-import Image from "next/image";
-import Link from "next/link";
+import { AppBar, Badge, Box, Button, IconButton, Input, InputAdornment, Link, Toolbar, Typography } from '@mui/material';
+import { ClearOutlined, SearchOutlined, ShoppingCartOutlined } from '@mui/icons-material';
 
-export const NavBar = () => {
+import { CartContext, UiContext } from '../../context';
 
-    const { theme } = useTheme();
+
+export const Navbar = () => {
+
+    const { asPath, push } = useRouter();
+    const { toggleSideMenu } = useContext(UiContext);
+    const { numberOfItems } = useContext(CartContext);
+
+    const [searchTerm, setSearchTerm] = useState('');
+    const [isSearchVisible, setIsSearchVisible] = useState(false);
+
+    const onSearchTerm = () => {
+        if (searchTerm.trim().length === 0) return;
+        push(`/search/${searchTerm}`);
+    }
+
+
+
+    const inputRef = (input: any) => {
+        if (input) {
+            setTimeout(() => {
+                { input.focus() }
+            }, 100);
+        }
+    }
 
     return (
+        <AppBar>
+            <Toolbar>
 
-        <div style={{
-            display: 'flex',
-            width: '100%',
-            flexDirection: 'row',
-            alignItems: 'center',
-            justifyContent: 'start',
-            padding: '0px 20px',
-            backgroundColor: theme?.colors.gray100.value
-        }}>
+                <NextLink href='/' passHref legacyBehavior>
+                    <Link display='flex' alignItems='center'>
+                        <Typography variant='h6'>Teslo |</Typography>
+                        <Typography sx={{ ml: 0.5 }}>Shop</Typography>
+                    </Link>
+                </NextLink>
 
-            <Image
-                src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/132.png"
-                alt="icono de la app"
-                width={70}
-                height={70}
-            ></Image>
+                <Box flex={1} />
 
-            <NextLink href="/" style={{
-                display: 'flex'
-            }}>
-                <Text color="white" h2>
-                    P
-                </Text>
-                <Text color="white" h3>
-                    okemon
-                </Text>
-            </NextLink>
+                <Box
+                    sx={{
+                        display: isSearchVisible
+                            ? 'none'
+                            : { xs: 'none', sm: 'block' }
+                    }}
+                    className='fadeIn'
+                >
+                    <NextLink href='/category/men' passHref legacyBehavior>
+                        <Link>
+                            <Button color={asPath === '/category/men' ? 'primary' : 'info'}>Hombres</Button>
+                        </Link>
+                    </NextLink>
 
-            <Spacer css={{ flex: 1 }} />
+                    <NextLink href='/category/women' passHref legacyBehavior>
+                        <Link>
+                            <Button color={asPath === '/category/women' ? 'primary' : 'info'}>Mujeres</Button>
+                        </Link>
+                    </NextLink>
 
-            <NextLink href="/favorites">
-                <Text color="white">
-                    Favoritos
-                </Text>
-            </NextLink>
+                    <NextLink href='/category/kid' passHref legacyBehavior>
+                        <Link>
+                            <Button color={asPath === '/category/kid' ? 'primary' : 'info'}>Niños</Button>
+                        </Link>
+                    </NextLink>
+                </Box>
 
-        </div>
+                <Box flex={1} />
+
+                {/* Pantalla grande */}
+                {
+                    isSearchVisible
+                        ? (
+                            <Input
+                                sx={{
+                                    display: { xs: 'none', sm: 'flex' }
+                                }}
+                                value={searchTerm}
+                                onChange={(e) => setSearchTerm(e.target.value)}
+                                onKeyPress={(e) => e.key === 'Enter' ? onSearchTerm() : null}
+                                inputRef={inputRef}
+                                type='text'
+                                placeholder="Buscar..."
+                                endAdornment={
+                                    <InputAdornment position="end">
+                                        <IconButton
+                                            onClick={() => setIsSearchVisible(false)}
+                                        >
+                                            <ClearOutlined />
+                                        </IconButton>
+                                    </InputAdornment>
+                                }
+                            />
+                        )
+                        : (
+                            <IconButton
+                                onClick={() => setIsSearchVisible(true)}
+                                className='fadeIn'
+                                sx={{
+                                    display: { xs: 'none', sm: 'flex' }
+                                }}
+                            >
+                                <SearchOutlined />
+                            </IconButton>
+                        )
+                }
+
+
+
+
+
+                {/* Pantalla pequeña */}
+                <IconButton
+                    sx={{ display: { xs: 'flex', sm: 'none' } }}
+                    onClick={toggleSideMenu}
+                >
+                    <SearchOutlined />
+                </IconButton>
+
+                <NextLink href='/cart' passHref legacyBehavior>
+                    <Link>
+                        <IconButton>
+                            <Badge badgeContent={
+                                numberOfItems > 9
+                                    ? '+9'
+                                    : numberOfItems
+                            }
+                                color='secondary'
+                            >
+                                <ShoppingCartOutlined />
+                            </Badge>
+                        </IconButton>
+                    </Link>
+                </NextLink>
+
+                <Button onClick={toggleSideMenu}>
+                    Menú
+                </Button>
+            </Toolbar>
+        </AppBar >
     )
 }

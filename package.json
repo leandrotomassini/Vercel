@@ -1,5 +1,5 @@
 {
-  "name": "pokemon-static",
+  "name": "teslo-shop",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -9,16 +9,24 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@nextui-org/react": "^1.0.0-beta.12",
-    "@types/canvas-confetti": "^1.6.0",
-    "@types/node": "20.1.5",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.2",
+    "@mui/x-data-grid": "^6.5.0",
+    "@types/node": "20.2.3",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
-    "axios": "^1.4.0",
-    "canvas-confetti": "^1.6.0",
-    "next": "13.4.2",
+    "js-cookie": "^3.0.5",
+    "mongoose": "^7.2.1",
+    "next": "13.4.3",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "react-slideshow-image": "^4.2.1",
+    "swr": "^2.1.5",
     "typescript": "5.0.4"
+  },
+  "devDependencies": {
+    "@types/js-cookie": "^3.0.3"
   }
 }
